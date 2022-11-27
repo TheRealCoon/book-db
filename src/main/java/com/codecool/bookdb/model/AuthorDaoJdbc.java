@@ -35,7 +35,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     public void update(Author author) {
         try (Connection con = dataSource.getConnection()) {
             final String SQL = "UPDATE author SET first_name = ?,  last_name = ? birth_date = ? WHERE id = ?;";
-            PreparedStatement ps = con.prepareStatement(SQL, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(SQL);
             ps.setString(1, author.getFirstName());
             ps.setString(2, author.getLastName());
             ps.setDate(3, author.getBirthDate());
@@ -48,7 +48,20 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public Author get(int id) {
-        return null;
+        Author author = null;
+        try (Connection con = dataSource.getConnection()) {
+            final String SQL = "SELECT first_name, last_name, birth_date FROM author WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                author = new Author(rs.getString(1), rs.getString(2), rs.getDate(3));
+                author.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return author;
     }
 
     @Override
