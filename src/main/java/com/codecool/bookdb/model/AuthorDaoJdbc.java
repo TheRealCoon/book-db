@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AuthorDaoJdbc implements AuthorDao {
@@ -66,6 +67,19 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public List<Author> getAll() {
-        return null;
+        List<Author> authors = new ArrayList<>();
+        try (Connection con = dataSource.getConnection()) {
+            final String SQL = "SELECT first_name, last_name, birth_date FROM author;";
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Author author = new Author(rs.getString(2), rs.getString(3), rs.getDate(4));
+                author.setId(rs.getInt(1));
+                authors.add(author);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return authors;
     }
 }
