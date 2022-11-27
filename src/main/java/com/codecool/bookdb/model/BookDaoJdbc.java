@@ -31,7 +31,16 @@ public class BookDaoJdbc implements BookDao{
 
     @Override
     public void update(Book book) {
-
+        try (Connection con = dataSource.getConnection()) {
+            final String SQL = "UPDATE book SET author_id = ?, title = ? WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ps.setInt(1, book.getAuthor().getId());
+            ps.setString(2, book.getTitle());
+            ps.setInt(3, book.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
