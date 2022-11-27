@@ -7,11 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class BookDaoJdbc implements BookDao{
+public class BookDaoJdbc implements BookDao {
     private final DataSource dataSource;
-    public BookDaoJdbc(DataSource dataSource) {
+    private final AuthorDao authorDao;
+
+    public BookDaoJdbc(DataSource dataSource, AuthorDao authorDao) {
         this.dataSource = dataSource;
+        this.authorDao = authorDao;
     }
+
     @Override
     public void add(Book book) {
         try (Connection con = dataSource.getConnection()) {
@@ -45,7 +49,20 @@ public class BookDaoJdbc implements BookDao{
 
     @Override
     public Book get(int id) {
-        return null;
+        Book book = null;
+        try (Connection con = dataSource.getConnection()) {
+            final String SQL = "SELECT author_id, title FROM book WHERE id = ?;";
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                book = new Book(authorDao.get(rs.getInt(1)), rs.getString(2));
+                book.setId(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return book;
     }
 
     @Override
