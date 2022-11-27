@@ -29,7 +29,7 @@ public class BookDaoJdbc implements BookDao {
             rs.next();
             book.setId(rs.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while adding new book.", e);
         }
 
     }
@@ -44,7 +44,7 @@ public class BookDaoJdbc implements BookDao {
             ps.setInt(3, book.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while updating book with id = " + book.getId() + ".", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class BookDaoJdbc implements BookDao {
                 book.setId(id);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while reading book with id = " + id +".", e);
         }
         return book;
     }
@@ -79,7 +79,7 @@ public class BookDaoJdbc implements BookDao {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while reading all books.", e);
         }
         return books;
     }
