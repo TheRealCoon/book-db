@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoJdbc implements BookDao {
@@ -67,6 +68,19 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public List<Book> getAll() {
-        return null;
+        List<Book> books = new ArrayList<>();
+        try (Connection con = dataSource.getConnection()) {
+            final String SQL = "SELECT id, author_id, title FROM book;";
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Book book = new Book(authorDao.get(rs.getInt(2)), rs.getString(3));
+                book.setId(rs.getInt(1));
+                books.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return books;
     }
 }

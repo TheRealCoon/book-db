@@ -69,7 +69,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     public List<Author> getAll() {
         List<Author> authors = new ArrayList<>();
         try (Connection con = dataSource.getConnection()) {
-            final String SQL = "SELECT first_name, last_name, birth_date FROM author;";
+            final String SQL = "SELECT id, first_name, last_name, birth_date FROM author;";
             PreparedStatement ps = con.prepareStatement(SQL);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
