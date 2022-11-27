@@ -28,7 +28,7 @@ public class AuthorDaoJdbc implements AuthorDao {
             rs.next();
             author.setId(rs.getInt(1));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while adding new author.", e);
         }
     }
 
@@ -43,7 +43,7 @@ public class AuthorDaoJdbc implements AuthorDao {
             ps.setInt(4, author.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while updating author with id = " + author.getId() + ".", e);
         }
     }
 
@@ -60,7 +60,7 @@ public class AuthorDaoJdbc implements AuthorDao {
                 author.setId(id);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while reading author with id = " + id + ".", e);
         }
         return author;
     }
@@ -78,7 +78,7 @@ public class AuthorDaoJdbc implements AuthorDao {
                 authors.add(author);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while reading all authors.", e);
         }
         return authors;
     }
