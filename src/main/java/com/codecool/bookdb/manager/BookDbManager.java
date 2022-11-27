@@ -3,9 +3,10 @@ package com.codecool.bookdb.manager;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 public class BookDbManager {
-    public DataSource connect() {
+    public DataSource connect() throws SQLException {
         var dataSource = new PGSimpleDataSource();
         dataSource.setServerName("localhost");
         dataSource.setPortNumber(5432);
