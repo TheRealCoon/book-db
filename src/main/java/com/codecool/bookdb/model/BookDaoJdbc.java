@@ -70,7 +70,7 @@ public class BookDaoJdbc implements BookDao {
     public List<Book> getAll() {
         List<Book> books = new ArrayList<>();
         try (Connection con = dataSource.getConnection()) {
-            final String SQL = "SELECT id, author_id, title FROM book;";
+            final String SQL = "SELECT id, author_id, title FROM book ORDER BY id;";
             PreparedStatement ps = con.prepareStatement(SQL);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
